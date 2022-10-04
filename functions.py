@@ -14,8 +14,8 @@ class Square(BaseFunction):
     def torch(self, x):
         return torch.square(x)
 
-    def sympy(self, x):
-        return sympy.square(x) 
+    def sympy(self):
+        return sympy.powdenest("x**2")
 
 class Sin(BaseFunction):
 
@@ -25,6 +25,9 @@ class Sin(BaseFunction):
     def torch(self, x):
         return torch.sin(x)
 
+    def sympy(self):
+        return sympy.sin("x")
+
 class Cos(BaseFunction):
 
     def __init__(self) -> None:
@@ -32,6 +35,9 @@ class Cos(BaseFunction):
 
     def torch(self, x):
         return torch.cos(x)
+        
+    def sympy(self, x):
+        return sympy.cos(x)
 
 class Linear(BaseFunction):
 
