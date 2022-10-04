@@ -6,7 +6,7 @@ class BaseFunction:
     def __init__(self) -> None:
         self.n_inputs = 1
 
-class Squared(BaseFunction):
+class Square(BaseFunction):
 
     def __init__(self) -> None:
         super().__init__()
@@ -64,4 +64,4 @@ class Multiply(Basefunction2):
         return torch.multiply(x, y)
         
     
-base_functions = [  Squared(), Sin()]
+base_functions = [Square(), Sin()]
