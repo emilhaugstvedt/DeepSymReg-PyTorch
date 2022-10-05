@@ -56,7 +56,7 @@ class Linear(BaseFunction):
         super().__init__()
 
     def torch(self, x):
-        return x
+        return 1 * x
     
     def sympy(self):
         return "x"
@@ -108,4 +108,4 @@ class Multiply(Basefunction2):
         return torch.multiply(x, y)
         
     
-base_functions = [Square(), Linear(), Exp()]
+base_functions = [Square(), Linear(), Sin(), Cos()]
