@@ -6,6 +6,17 @@ class BaseFunction:
     def __init__(self) -> None:
         self.n_inputs = 1
 
+class Constant(BaseFunction):
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def torch(self, x):
+        return torch.ones(x.shape)
+
+    def sympy(self):
+        return "1"
+
 class Square(BaseFunction):
 
     def __init__(self) -> None:
@@ -36,8 +47,8 @@ class Cos(BaseFunction):
     def torch(self, x):
         return torch.cos(x)
         
-    def sympy(self, x):
-        return sympy.cos(x)
+    def sympy(self):
+        return sympy.cos("x")
 
 class Linear(BaseFunction):
 
@@ -46,6 +57,33 @@ class Linear(BaseFunction):
 
     def torch(self, x):
         return x
+    
+    def sympy(self):
+        return "x"
+
+class Sqrt(BaseFunction):
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def torch(self, x):
+        return torch.sqrt(x)
+
+    def sympy(self):
+        x = sympy.Symbol('x')
+        return sympy.sqrt(x)
+
+class Exp(BaseFunction):
+    
+        def __init__(self) -> None:
+            super().__init__()
+    
+        def torch(self, x):
+            return torch.exp(x)
+    
+        def sympy(self):
+            x = sympy.Symbol('x')
+            return sympy.exp(x)
 
 
 class Basefunction2:
@@ -70,4 +108,4 @@ class Multiply(Basefunction2):
         return torch.multiply(x, y)
         
     
-base_functions = [Square(), Sin()]
+base_functions = [Square(), Linear(), Exp()]
