@@ -56,22 +56,22 @@ class SymbolicNet(torch.nn.Module):
         self.functions = functions
         self.n_funcs = len(functions)
         self.fc1 = SymbolicLayer(input_size, functions=functions)
-        self.linear_fc1 = nn.Linear(len(functions), hidden_size)
-        self.fc2 = SymbolicLayer(hidden_size, functions=functions)
-        self.output = nn.Linear(len(functions), output_size)
+        #self.linear_fc1 = nn.Linear(len(functions), hidden_size)
+        #self.fc2 = SymbolicLayer(hidden_size, functions=functions)
+        #self.output = nn.Linear(len(functions), output_size)
         
     def forward(self, x):
         x = self.fc1(x)
-        x = self.linear_fc1(x)
-        x = self.fc2(x)
-        x = self.output(x)
+        #x = self.linear_fc1(x)
+        #x = self.fc2(x)
+        #x = self.output(x)
         x = torch.sum(x)
         return x
     
-    def train_n_epochs(self, x, y, epochs=100, lr=0.0001):
-        optimizer = optim.Adam(self.parameters(), lr=lr)
+    def train_n_epochs(self, x, y, epochs=100, lr=0.0001, weight_decay=0, verbose=False):
+        optimizer = optim.Adam(self.parameters(), lr=lr, weight_decay=weight_decay)
         loss_fn = nn.MSELoss()
-        for epoch in tqdm(range(epochs)):
+        for epoch in range(epochs):
             total_loss = 0 # Storing total loss during training
             # Forward pass and weight update for each sample
             for i in range(len(x)):
@@ -82,8 +82,9 @@ class SymbolicNet(torch.nn.Module):
                 optimizer.step()
                 total_loss += loss.item()
         
-            if epoch % 100 == 0:
-                print(f'Epoch: {epoch} Loss: {loss.item()}')
+            if verbose:
+                if epoch % 100 == 0:
+                    print(f'Epoch: {epoch} Loss: {loss.item()}')
     
     def get_weights(self):
         return self.fc1.get_weights() #self.output.weight

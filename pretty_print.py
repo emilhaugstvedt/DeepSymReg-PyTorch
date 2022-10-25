@@ -1,15 +1,4 @@
-"""
-Generate a mathematical expression of the symbolic regression network (AKA EQL network) using SymPy. This expression
-can be used to pretty-print the expression (including human-readable text, LaTeX, etc.). SymPy also allows algebraic
-manipulation of the expression.
-The main function is network(...)
-There are several filtering functions to simplify expressions, although these are not always needed if the weight matrix
-is already pruned.
-"""
-
 import sympy as sym
-import functions
-
 
 def apply_activation(W, funcs, n_double=0):
     """Given an (n, m) matrix W and (m) vector of funcs, apply funcs to W.
@@ -72,12 +61,12 @@ def sym_pp(W_list, funcs, var_names, threshold=0.01, n_double=0):
     return expr
 
 
-def last_pp(eq, W):
+def last_pp(eq, W, threshold=0.01):
     """Pretty print the last layer."""
-    return eq * filter_mat(sym.Matrix(W))
+    return eq * filter_mat(sym.Matrix(W).T, threshold=threshold)
 
 
-def network(weights, funcs, var_names, threshold=0.01):
+def network(weights, funcs, var_names, threshold=0.01, n_double=0):
     """Pretty print the entire symbolic regression network.
     Arguments:
         weights: list of weight matrices for the entire network
@@ -86,11 +75,9 @@ def network(weights, funcs, var_names, threshold=0.01):
         threshold: threshold for filtering expression. set to 0 for no filtering.
     Returns:
         Simplified sympy expression."""
-    n_double = functions.count_double(funcs)
-    funcs = [func.sp for func in funcs]
 
     expr = sym_pp(weights[:-1], funcs, var_names, threshold=threshold, n_double=n_double)
-    expr = last_pp(expr, weights[-1])
+    expr = last_pp(expr, weights[-1], threshold=threshold)
     expr = expr[0, 0]
     return expr
 
@@ -114,12 +101,3 @@ def filter_expr(expr, threshold=0.01):
         elif not arg.is_constant() and abs(arg.args[0]) > threshold:
             expr_new = expr_new + arg
     return expr_new
-
-
-def filter_expr2(expr, threshold=0.01):
-    """Sets all constants under threshold to 0
-    TODO: Test"""
-    for a in sym.preorder_traversal(expr):
-        if isinstance(a, sym.Float) and a < threshold:
-            expr = expr.subs(a, 0)
-    return expr
